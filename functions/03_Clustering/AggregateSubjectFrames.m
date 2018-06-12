@@ -13,6 +13,9 @@
 % clustering
 % - final_mask is the final mask across subjects considering only shared
 % voxels
+%
+% 12.6.2018 - YF/DZ modified for different frame numbers in subjects
+
 function [I_sig,final_mask,subject_labels,time_labels,AI,AI_subject_labels] = AggregateSubjectFrames(Paths,input_param,fid) 
     
     nSub=length(Paths);
@@ -56,11 +59,11 @@ function [I_sig,final_mask,subject_labels,time_labels,AI,AI_subject_labels] = Ag
             
             if iS == 1 % allocating memory in first iteration
                 final_mask = ones(nVox,1);
-                I_sig = sparse(2*nTP*nSub,nVox);
-                AI = sparse(nTP*nSub,nVox);
-                AI_subject_labels = zeros(nTP*nSub,1);
-                subject_labels = zeros(2*nTP*nSub,1);
-                time_labels = zeros(2*nTP*nSub,1);
+                I_sig = sparse(2*nTP,nVox);
+                AI = sparse(nTP,nVox);
+                AI_subject_labels = zeros(nTP,1);
+                subject_labels = zeros(2*nTP,1);
+                time_labels = zeros(2*nTP,1);
                 iI_sig=1;
                 iAI=1;
             end

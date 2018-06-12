@@ -56,8 +56,6 @@ clc;clear all;close all;
 AddPaths();
 
 % setting up all parameters to run Clustering
-%Inputs_TimeCourses_Data
-
 Inputs_TimeCourses_Data_OpenfMRI
 
 Inputs_TimeCourses

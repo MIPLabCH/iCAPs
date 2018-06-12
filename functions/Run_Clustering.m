@@ -127,7 +127,7 @@ function [] = Run_Clustering(param)
         SubjPath = fullfile(param.PathData,param.Subjects);
         resultsPath=fullfile(SubjPath,'TA_results',param.title);
         
-        [I_sig,final_mask,subject_labels,time_labels,AI,AI_subject_labels] = AggregateSubjectFramesbis(resultsPath,param,fid);
+        [I_sig,final_mask,subject_labels,time_labels,AI,AI_subject_labels] = AggregateSubjectFrames(resultsPath,param,fid);
         WriteInformation(fid,'Saving aggregated data...');
         save(fullfile(param.outDir_main,'I_sig.mat'),'I_sig','-v7.3');
         save(fullfile(param.outDir_main,'AI.mat'),'AI','-v7.3');

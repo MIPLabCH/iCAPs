@@ -61,7 +61,6 @@ clc;clear all;close all;
 AddPaths();
 
 % setting up all parameters to run TA
-%Inputs_TA_Data
 Inputs_TA_DATA_OpenfMRI      % OpenfMRI test
 Inputs_TA
 

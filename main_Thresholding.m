@@ -56,8 +56,6 @@ clc;clear all;close all;
 AddPaths();
 
 % setting up all parameters to run Thresholding
-%Inputs_Thresholding_Data
-
 Inputs_Thresholding_Data_OpenfMRI   % OpenfMRI data test
 
 Inputs_Thresholding
