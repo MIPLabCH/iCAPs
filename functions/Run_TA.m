@@ -119,7 +119,7 @@ function [] = Run_TA(param)
             TA_surrogate_done=0;
         end
 
-        if ~TA_real_done || ~TA_surrogate_done
+        if ~TA_real_done || TA_surrogate_done~=1
             % Reading subject data
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -155,6 +155,7 @@ function [] = Run_TA(param)
             % saving mask as nifti file
             WriteInformation(fid,'Saving mask 4D input...');
             save4Dnii(resultsPath,'inputData','mask',param.mask_3D,param.fHeader.fname);
+            save4Dnii(resultsPath,'inputData','fData',fData,param.fHeader.fname,param.mask,param.Dimension);
             
             clear fData fHeader
             
