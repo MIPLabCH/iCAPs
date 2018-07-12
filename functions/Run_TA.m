@@ -247,7 +247,7 @@ function [] = Run_TA(param)
             end
             
             % surrogate data
-            if TA_surrogate_done==0
+            if TA_surrogate_done~=1
                 % Surrogate data generation
                 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
                 Surrogate = GenerateSurrogate(TC,SubjPath_TA,param,fid);
