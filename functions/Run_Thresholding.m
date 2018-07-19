@@ -108,6 +108,7 @@ function [] = Run_Thresholding(param)
             param.fHeader=ptmp.param.fHeader;
             param.mask=ptmp.param.mask;
             param.Dimension=ptmp.param.Dimension;
+            param.TemporalMask=ptmp.param.TemporalMask;
             clear ptmp
 
             WriteInformation(fid,['Removing NaNs from innovations...']);
@@ -128,7 +129,7 @@ function [] = Run_Thresholding(param)
             WriteInformation(fid,['Finished running thresholding for subject ',SubjPath,'...\n']);
             
         elseif Thresholding_done==1
-             WriteInformation(fid_sub,'Thresholding already done, skipping...\n');
+             WriteInformation(fid,'Thresholding already done, skipping...\n');
         end
             
         
