@@ -89,7 +89,7 @@ function [] = Run_Thresholding(param)
         % check whether thresholding was already executed for this subject
         [TA_real_done,TA_surrogate_done,Thresholding_done] = Check_TA_Files(resultsPath,param.thresh_title);
         if ~TA_real_done || TA_surrogate_done~=1
-           WriteInformation(fid,['No total activation results, run TA routine first! skipping...']);
+           WriteInformation(fid,['No total activation results, run TA routine first! skipping...\n']);
            continue;
         end
         
