@@ -220,7 +220,7 @@ function [] = Run_Clustering(param)
                 save4Dnii(param.outDir_iCAPs,'','iCAPs_z',iCAPs_z',fullfile(param.outDir_main,'final_mask.nii'),final_mask);
 
             else
-                 WriteInformation(fid_sub,'Clustering already done, skipping...');
+                 WriteInformation(fid,'Clustering already done, skipping...');
             end
         end
     end

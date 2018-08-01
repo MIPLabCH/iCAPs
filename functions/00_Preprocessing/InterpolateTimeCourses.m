@@ -8,7 +8,7 @@
 %
 % Outputs:
 % - TC is the output 2D matrix (n_ret_vox x n_tp) following interpolation
-function [TC] = InterpolateTimeCourses(fData,TemporalMask,param,fid)
+function [TC,TemporalMask] = InterpolateTimeCourses(fData,TemporalMask,param,fid)
     
     if ~isfield(param,'interType') || isempty(param.interType)
         param.interType='spline';

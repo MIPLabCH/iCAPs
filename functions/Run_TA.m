@@ -168,7 +168,7 @@ function [] = Run_TA(param)
                 % TemporalMask that is 0 (i.e. if there is at least one frame for which we
                 % must interpolate)
                 if ~all(param.TemporalMask)
-                    TC = InterpolateTimeCourses(TC,param.TemporalMask,param,fid);
+                    [TC, param.TemporalMask] = InterpolateTimeCourses(TC,param.TemporalMask,param,fid);
                 else
                     WriteInformation(fid,['No interpolation done for ',SubjPath_TA,'...']);
                 end
