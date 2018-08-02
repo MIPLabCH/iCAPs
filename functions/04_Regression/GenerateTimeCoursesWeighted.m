@@ -51,10 +51,10 @@ function [TC,stats] = GenerateTimeCoursesWeighted(clusteringResults,param)
     %% getting variables
     iCAPs=clusteringResults.iCAPs;
     IDX=clusteringResults.IDX;
-    AI=clusteringResults.AI;
+    AI=clusteringResults.AI';
     if size(AI,1)<size(AI,2)
-%         warning('Inverting activity inducing signal for transient-informed regression');
-        AI=AI';
+        warning('fewer voxels than observations, AI matrix might be inverted!');
+%         AI=AI';
     end
     AI_subject_labels=clusteringResults.AI_subject_labels;
     subject_labels=clusteringResults.subject_labels;
