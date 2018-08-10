@@ -29,7 +29,7 @@
 %       * Thresholded time courses and overall characteristics
 %         (nSubjects x 1 cell objects)
 %           .TC_norm_thes - normalized and thresholded time courses, with
-%               occurences of only one frame removed from the TC
+%               occurrences of only one frame removed from the TC
 %           .TC_active - activity information, 1 if positive activity, -1
 %               if negative, 0 if none
 %           .coactiveiCAPs_total - 1 x nTP_subject with number of active 
@@ -39,49 +39,49 @@
 % 
 %       * Temporal characteristics of activity blocks in time courses
 %         (nClus x nSub matrices)
-%           .occurences - number of activity blocks in thresholded time 
+%           .occurrences - number of activity blocks in thresholded time 
 %               courses for each cluster in each subject
-%           .occurences_pos - number of positive activity blocks in 
+%           .occurrences_pos - number of positive activity blocks in 
 %               thresholded time courses
-%           .occurences_neg - number of negative activity blocks in 
+%           .occurrences_neg - number of negative activity blocks in 
 %               thresholded time courses
 % 
-%           .durations_total_counts - number of active time points per 
+%           .duration_total_counts - number of active time points per 
 %               cluster per subject
-%           .durations_total_pos_counts - number of positively active time 
+%           .duration_total_pos_counts - number of positively active time 
 %               points per cluster per subject
-%           .durations_total_neg_counts - number of negatively active time 
+%           .duration_total_neg_counts - number of negatively active time 
 %               points per cluster per subject
 % 
-%           .durations_total_perc - total duration of iCAP in percentage of
+%           .duration_total_perc - total duration of iCAP in percentage of
 %               the whole scan duration
-%           .durations_total_pos_perc - total positive duration of iCAP in 
+%           .duration_total_pos_perc - total positive duration of iCAP in 
 %               percentage of the whole scan duration
-%           .durations_total_neg_perc - total negative duration of iCAP in 
+%           .duration_total_neg_perc - total negative duration of iCAP in 
 %               percentage of the whole scan duration
 % 
-%           .durations_avg_counts - average duration of activity blocks 
+%           .duration_avg_counts - average duration of activity blocks 
 %               (number of time points)
-%           .durations_avg_pos_counts - average duration of positive 
+%           .duration_avg_pos_counts - average duration of positive 
 %               activity blocks (number of time points)
-%           .durations_avg_pos_counts - average duration of negative 
+%           .duration_avg_pos_counts - average duration of negative 
 %               activity blocks (number of time points)
 % 
 %       * Co-activation characteristics of iCAPs time courses
 %         (nClus x nClus x nSub)
-%           .coactivation_counts - coactivation duration (number of time
+%           .coupling_counts - coupling duration (number of time
 %               points)
-%           .coactivation_normBoth - coactivation duration (percentage of
+%           .coupling_jacc - coupling duration (percentage of
 %               total duration of both iCAPs)
 % 
-%           .coactivation_sameSign - same-signed coactivation (positive
+%           .coupling_sameSign - same-signed coupling (positive
 %               coupling) duration (number of time points)
-%           .coactivation_diffSign - differently-signed coactivation
+%           .coupling_diffSign - differently-signed coupling
 %               (negative coupling) duration (number of time points)
-%           .coactivation_sameSign_normBoth - same-signed coactivation
-%               duration (percentage of tota duration of both iCAPs)
-%           .coactivation_diffSign_normBoth - differently-signed
-%               coactivation duration (percentage of tota duration of both 
+%           .coupling_sameSign_jacc - same-signed coupling
+%               duration (percentage of total duration of both iCAPs)
+%           .coupling_diffSign_jacc - differently-signed
+%               coupling duration (percentage of tota duration of both 
 %               iCAPs)
 
 
@@ -124,7 +124,7 @@ for iS = 1:nSub
     TC_norm_thes=TC_norm;
     TC_norm_thes{iS}(abs(TC_norm{iS})<thres)=0;
     
-    % remove occurences of only one frame
+    % remove occurrences of only one frame
     for iC=1:size(TC_norm_thes{iS},1) % I am computing thresholded time courses for all iCAPs first because I will use them for the co-activation computation
         activeComp=bwconncomp(TC_norm_thes{iS}(iC,:));
         
@@ -161,18 +161,23 @@ for iS = 1:nSub
             end
         end
         
-        % compute occurences and average durations
-        tempChar.occurences(iC,iS)=activeComp.NumObjects;
-        tempChar.occurences_pos(iC,iS)=nnz(activeComp.compSign>0);
-        tempChar.occurences_neg(iC,iS)=nnz(activeComp.compSign<0);
+        % compute occurrences and average duration
+        tempChar.occurrences(iC,iS)=activeComp.NumObjects;
+        tempChar.occurrences_pos(iC,iS)=nnz(activeComp.compSign>0);
+        tempChar.occurrences_neg(iC,iS)=nnz(activeComp.compSign<0);
         
-        tempChar.durations_total_counts(iC,iS)=nnz(TC_norm_thes{iS}(iC,:));
-        tempChar.durations_total_pos_counts(iC,iS)=nnz(TC_norm_thes{iS}(iC,:)>0);
-        tempChar.durations_total_neg_counts(iC,iS)=nnz(TC_norm_thes{iS}(iC,:)<0);
+        tempChar.duration_total_counts(iC,iS)=nnz(TC_norm_thes{iS}(iC,:));
+        tempChar.duration_total_pos_counts(iC,iS)=nnz(TC_norm_thes{iS}(iC,:)>0);
+        tempChar.duration_total_neg_counts(iC,iS)=nnz(TC_norm_thes{iS}(iC,:)<0);
         
-        tempChar.durations_avg_counts(iC,iS)=tempChar.durations_total_counts(iC,iS)/activeComp.NumObjects;
-        tempChar.durations_avg_pos_counts(iC,iS)=tempChar.durations_total_pos_counts(iC,iS)/tempChar.occurences_pos(iC,iS);
-        tempChar.durations_avg_neg_counts(iC,iS)=tempChar.durations_total_neg_counts(iC,iS)/tempChar.occurences_neg(iC,iS);
+        % compute duration in percentage of total scan time
+        tempChar.duration_total_perc(:,iS)=tempChar.duration_total_counts(:,iS)/tempChar.nTP_sub(iS)*100;
+        tempChar.duration_total_pos_perc(:,iS)=tempChar.duration_total_pos_counts(:,iS)/tempChar.nTP_sub(iS)*100;
+        tempChar.duration_total_neg_perc(:,iS)=tempChar.duration_total_neg_counts(:,iS)/tempChar.nTP_sub(iS)*100;
+
+        tempChar.duration_avg_counts(iC,iS)=tempChar.duration_total_counts(iC,iS)/activeComp.NumObjects;
+        tempChar.duration_avg_pos_counts(iC,iS)=tempChar.duration_total_pos_counts(iC,iS)/tempChar.occurrences_pos(iC,iS);
+        tempChar.duration_avg_neg_counts(iC,iS)=tempChar.duration_total_neg_counts(iC,iS)/tempChar.occurrences_neg(iC,iS);
         
         % innovation counts
         tempChar.innov_counts(iC,iS)=nnz(IDX==iC&subject_labels==iS);
@@ -194,50 +199,57 @@ for iS = 1:nSub
         % compute signed co-activations with all other iCAPs
         for iC2=1:nClus
             % time points of co-activation of iCAP iC and iCAP iC2
-            tempChar.coactivation{iS}(iC,iC2,:)=TC_norm_thes{iS}(iC,:) & ...
+            tempChar.coupling{iS}(iC,iC2,:)=TC_norm_thes{iS}(iC,:) & ...
                 TC_norm_thes{iS}(iC2,:);
             
             % percentage of co-activation with iCAP iC2, with respect to
             % total activation of iCAP iC
-            tempChar.coactivation_counts(iC,iC2,iS)=nnz(tempChar.coactivation{iS}(iC,iC2,:));
-            tempChar.coactivation_normBoth(iC,iC2,iS)=nnz(tempChar.coactivation{iS}(iC,iC2,:))/...
+            tempChar.coupling_counts(iC,iC2,iS)=nnz(tempChar.coupling{iS}(iC,iC2,:));
+            tempChar.coupling_jacc(iC,iC2,iS)=nnz(tempChar.coupling{iS}(iC,iC2,:))/...
                 nnz(TC_norm_thes{iS}(iC,:)~=0 | TC_norm_thes{iS}(iC2,:)~=0);
             
             % signed co-activation
-            tempChar.coactivation_posPos{iS}(iC,iC2,:)=TC_norm_thes{iS}(iC,:)>0 & ...
+            tempChar.coupling_posPos_counts{iS}(iC,iC2,:)=TC_norm_thes{iS}(iC,:)>0 & ...
                 TC_norm_thes{iS}(iC2,:)>0;
-            tempChar.coactivation_posNeg{iS}(iC,iC2,:)=TC_norm_thes{iS}(iC,:)>0 & ...
+            tempChar.coupling_posNeg_counts{iS}(iC,iC2,:)=TC_norm_thes{iS}(iC,:)>0 & ...
                 TC_norm_thes{iS}(iC2,:)<0;
-            tempChar.coactivation_negPos{iS}(iC,iC2,:)=TC_norm_thes{iS}(iC,:)<0 & ...
+            tempChar.coupling_negPos_counts{iS}(iC,iC2,:)=TC_norm_thes{iS}(iC,:)<0 & ...
                 TC_norm_thes{iS}(iC2,:)>0;
-            tempChar.coactivation_negNeg{iS}(iC,iC2,:)=TC_norm_thes{iS}(iC,:)<0 & ...
+            tempChar.coupling_negNeg_counts{iS}(iC,iC2,:)=TC_norm_thes{iS}(iC,:)<0 & ...
                 TC_norm_thes{iS}(iC2,:)<0;
             
-            tempChar.coactivation_sameSign(iC,iC2,iS)=(nnz(tempChar.coactivation_posPos{iS}(iC,iC2,:))+...
-                nnz(tempChar.coactivation_negNeg{iS}(iC,iC2,:)));
-            tempChar.coactivation_diffSign(iC,iC2,iS)=(nnz(tempChar.coactivation_posNeg{iS}(iC,iC2,:))+...
-                nnz(tempChar.coactivation_negPos{iS}(iC,iC2,:)));
+            tempChar.coupling_sameSign_counts(iC,iC2,iS)=(nnz(tempChar.coupling_posPos_counts{iS}(iC,iC2,:))+...
+                nnz(tempChar.coupling_negNeg{iS}(iC,iC2,:)));
+            tempChar.coupling_diffSign_counts(iC,iC2,iS)=(nnz(tempChar.coupling_posNeg_counts{iS}(iC,iC2,:))+...
+                nnz(tempChar.coupling_negPos{iS}(iC,iC2,:)));
             
             % percentage of signed co-activation with iCAP iC2, with
             % respect to total positive or negative activation of both
             % iCAPs
-            tempChar.coactivation_sameSign_normBoth(iC,iC2,iS)=(nnz(tempChar.coactivation_posPos{iS}(iC,iC2,:))+...
-                nnz(tempChar.coactivation_negNeg{iS}(iC,iC2,:)))/...
+            tempChar.coupling_sameSign_jacc(iC,iC2,iS)=(nnz(tempChar.coupling_posPos_counts{iS}(iC,iC2,:))+...
+                nnz(tempChar.coupling_negNeg_counts{iS}(iC,iC2,:)))/...
                 nnz(TC_norm_thes{iS}(iC,:)~=0 | TC_norm_thes{iS}(iC2,:)~=0);
-            tempChar.coactivation_diffSign_normBoth(iC,iC2,iS)=(nnz(tempChar.coactivation_posNeg{iS}(iC,iC2,:))+...
-                nnz(tempChar.coactivation_negPos{iS}(iC,iC2,:)))/...
+            tempChar.coupling_diffSign_jacc(iC,iC2,iS)=(nnz(tempChar.coupling_posNeg_counts{iS}(iC,iC2,:))+...
+                nnz(tempChar.coupling_negPos_counts{iS}(iC,iC2,:)))/...
                 nnz(TC_norm_thes{iS}(iC,:)~=0 | TC_norm_thes{iS}(iC2,:)~=0);
+            
+            % percentage of positive or negative couplings (if coupled)
+            tempChar.coupling_sameSign_perc(iC,iC2,iS)=tempChar.coupling_sameSign_counts(iC,iC2,iS)/tempChar.coupling_counts(iC,iC2,iS)*100;
+            tempChar.coupling_diffSign_perc(iC,iC2,iS)=tempChar.coupling_diffSign_counts(iC,iC2,iS)/tempChar.coupling_counts(iC,iC2,iS)*100;
             
             
             if iC==iC2;
-                tempChar.coactivation_counts(iC,iC2,iS)=nan;
-                tempChar.coactivation_normBoth(iC,iC2,iS)=nan;
+                tempChar.coupling_counts(iC,iC2,iS)=nan;
+                tempChar.coupling_jacc(iC,iC2,iS)=nan;
                 
-                tempChar.coactivation_sameSign(iC,iC2,iS)=nan;
-                tempChar.coactivation_diffSign(iC,iC2,iS)=nan;
+                tempChar.coupling_sameSign(iC,iC2,iS)=nan;
+                tempChar.coupling_diffSign(iC,iC2,iS)=nan;
                 
-                tempChar.coactivation_sameSign_normBoth(iC,iC2,iS)=nan;
-                tempChar.coactivation_diffSign_normBoth(iC,iC2,iS)=nan;
+                tempChar.coupling_sameSign_jacc(iC,iC2,iS)=nan;
+                tempChar.coupling_diffSign_jacc(iC,iC2,iS)=nan;
+                
+                tempChar.coupling_sameSign_perc(iC,iC2,iS)=nan;
+                tempChar.coupling_diffSign_perc(iC,iC2,iS)=nan;
             end
             
         end
@@ -245,24 +257,19 @@ for iS = 1:nSub
     end
     
     % remove nans
-    tempChar.durations_avg_counts(isnan(tempChar.durations_avg_counts))=0; 
-    tempChar.durations_avg_pos_counts(isnan(tempChar.durations_avg_pos_counts))=0; 
-    tempChar.durations_avg_neg_counts(isnan(tempChar.durations_avg_neg_counts))=0;
-    
-    % compute measures in percentage
-    tempChar.durations_total_perc(:,iS)=tempChar.durations_total_counts(:,iS)/tempChar.nTP_sub(iS)*100;
-    tempChar.durations_total_pos_perc(:,iS)=tempChar.durations_total_pos_counts(:,iS)/tempChar.nTP_sub(iS)*100;
-    tempChar.durations_total_neg_perc(:,iS)=tempChar.durations_total_neg_counts(:,iS)/tempChar.nTP_sub(iS)*100;
+    tempChar.duration_avg_counts(isnan(tempChar.duration_avg_counts))=0; 
+    tempChar.duration_avg_pos_counts(isnan(tempChar.duration_avg_pos_counts))=0; 
+    tempChar.duration_avg_neg_counts(isnan(tempChar.duration_avg_neg_counts))=0;
 end
 
 
 % % compute measures in seconds
-% tempChar.durations_total_sec=tempChar.durations_total_counts.*param.TR;
-% tempChar.durations_avg_sec=tempChar.durations_avg_counts.*param.TR;
-% tempChar.durations_total_pos_sec=tempChar.durations_total_pos_counts.*param.TR;
-% tempChar.durations_avg_pos_sec=tempChar.durations_avg_pos_counts.*param.TR;
-% tempChar.durations_total_neg_sec=tempChar.durations_total_neg_counts.*param.TR;
-% tempChar.durations_avg_neg_sec=tempChar.durations_avg_neg_counts.*param.TR;
+% tempChar.duration_total_sec=tempChar.duration_total_counts.*param.TR;
+% tempChar.duration_avg_sec=tempChar.duration_avg_counts.*param.TR;
+% tempChar.duration_total_pos_sec=tempChar.duration_total_pos_counts.*param.TR;
+% tempChar.duration_avg_pos_sec=tempChar.duration_avg_pos_counts.*param.TR;
+% tempChar.duration_total_neg_sec=tempChar.duration_total_neg_counts.*param.TR;
+% tempChar.duration_avg_neg_sec=tempChar.duration_avg_neg_counts.*param.TR;
     
 end
 

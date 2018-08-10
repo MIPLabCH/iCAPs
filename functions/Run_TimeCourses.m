@@ -184,19 +184,20 @@ function [] = Run_Regression(param)
                         save(fullfile(param.outDir_reg,'param.mat'),'param');
                         save(fullfile(param.outDir_reg,'tempChar.mat'),'tempChar');
                         
-                        % add a function to plot BIC and AIC (and maybe the
-                        % correlation with measured amplitudes?)
-                        best_id_bic=evaluateSoftClusterThres(TC_stats,param,fid);
-                        best_TC=TC{best_id_bic};
-                        best_TC_stats=TC_stats{best_id_bic};
-                        best_tempChar=tempChar{best_id_bic};
-                        save(fullfile(param.outDir_reg,'best_TC.mat'),'best_TC');
-                        save(fullfile(param.outDir_reg,'best_TC_stats.mat'),'best_TC_stats');
-                        save(fullfile(param.outDir_reg,'best_tempChar.mat'),'best_tempChar');
-                        
                         if isfield(param,'evalAmplitudeCorrs') && param.evalAmplitudeCorrs
                             evaluateSoftClusterThres_corrs(clusteringResults,TC,param,fid)
                         end
+                        
+                        % add a function to plot BIC and AIC (and maybe the
+                        % correlation with measured amplitudes?)
+                        best_id_bic=evaluateSoftClusterThres(TC_stats,param,fid);
+                        TC=TC{best_id_bic};
+                        TC_stats=TC_stats{best_id_bic};
+                        tempChar=tempChar{best_id_bic};
+                        best_val=strrep(num2str(param.softClusterThres(best_id_bic)),'.','DOT');
+                        save(fullfile(param.outDir_iCAPs,['TC_' best_val '.mat']),'TC');
+                        save(fullfile(param.outDir_iCAPs,['TC_stats_' best_val '.mat']),'TC_stats');
+                        save(fullfile(param.outDir_iCAPs,['tempChar_' best_val '.mat']),'tempChar');
                         
                     else
                         WriteInformation(fid,'Transient-informed regression has already been done, skipping...');

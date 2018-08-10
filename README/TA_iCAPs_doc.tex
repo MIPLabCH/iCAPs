@@ -164,7 +164,7 @@ After aggregating data from all subjects, clustering will be applied to signific
 \item \textit{iCAPs\_z} (.mat and .nii): z-scored cluster centers
 \item \textit{dist\_to\_centroid} ($N_{significant\_innovations} \times N_{clusters}$): distances from every clustered innovation frame to each cluster center
 \item \textit{IDX}  ($N_{significant\_innovations} \times N1$): for each frame the index of the cluster it is assigned to
-\item \textit{param}: structure containing all input parameters, whcih lead to these results
+\item \textit{param}: structure containing all input parameters, which lead to these results
 \end{itemize}
 
 \subsection{Consensus Clustering}
@@ -188,7 +188,7 @@ If time courses are extracted by transient-informed regression \cite{Zoller2018}
 	\begin{itemize}
 	\item \textit{TC}: cell array with time courses of every subject
 	\item \textit{TC\_stats}: statistics of data fite (BIC, AIC, ...)
-	\item \textit{tempChar}: cell array with temporal characteristics (durations, coactivations, ...) for every subject's time courses
+	\item \textit{tempChar}: cell array with temporal characteristics (duration, coactivations, ...) for every subject's time courses
 	\end{itemize}}
 \item {\textit{Files related to selection of best soft assignment factor:}
 	\begin{itemize}
@@ -197,16 +197,35 @@ If time courses are extracted by transient-informed regression \cite{Zoller2018}
 	\item \textit{AICsum}: sum of AIC across all subject, knee point marked in red
 	\item \textit{AICdist}: distribution of AIC across all subject, knee point marked in red
 	\end{itemize}}
-\item {\textit{Results for best soft assignment factor according to BIC:} \textit{best\_TC}, \textit{best\_TC\_stats} and \textit{best\_tempChar}}
 \end{itemize}
+Results for the best soft assignment factor according to BIC will be saved in main iCAPs directory, it will contain the files: \textit{TC} (time courses), \textit{TC\_stats} (statistics: BIC/AIC etc.) and \textit{tempChar} (temporal characteristics).
+\\\\
+Computed temporal characteristics are:
+\begin{itemize}
+	\item \textit{nTP\_sub}: total number of time points per subject
+	\item \textit{innov\_counts\_total / innov\_counts\_perc}: total number / percentage of significant innovation frames
+	\item \textit{innov\_counts (\_percOfInnov)}: number of innovations in each iCAP (percentage of total number of significant innovations)
+	\item \textit{TC\_norm\_thes}: z-scored and thresholded time courses
+	\item \textit{TC\_active}: binarized time courses (+1/0/-1 for positive/none/negative activation)
+	\item \textit{coactiveiCAPs\_total}: number of co-active iCAPs per time point
+	\item \textit{occurrences (\_pos/\_neg)}: number of activation blocks (positive/negative activations)
+	\item \textit{duration\_total\_counts (\_pos/\_neg)}: total number of active time points (positive/negative activations)
+	\item \textit{duration\_avg\_counts (\_pos/\_neg)}: average duration of every  (=occurrences/duration\_total\_counts)
+	\item \textit{coupling\_counts}: number of frames with co-activation for every pairwise combination of iCAPs
+	\item \textit{coupling\_jacc}: coupling Jaccard index (overlap divided by activation union)
+	\item \textit{coupling\_sameSign(\_diffSign)\_counts}: positive (negative) couplings
+	\item \textit{coupling\_sameSign(\_diffSign)\_jacc}: positive (negative) coupling Jaccard index
+\end{itemize}
+For the computation of duration and couplings, only activation blocks of 2 timepoints or more have been considered
+
 
 \subsection{Unconstrained regression}
 We do not recommend this option, but provide the possibility to compare with \cite{Karahanoglu2015,Bolton2018}
 If time courses are extracted by unconstrained regression, a subfolder ``TCs\_unconstrained" will be created in the corresponding clustering folder. It will contain the following files:
 \begin{itemize}
 	\item \textit{TC\_unc}: cell array with time courses of every subject
-	\item \textit{TC\_unc\_stats}: statistics of data fite (BIC, AIC, ...)
-	\item \textit{tempChar\_unc}: cell array with temporal characteristics (durations, coactivations, ...) for every subject's time courses
+	\item \textit{TC\_unc\_stats}: statistics of data fit (BIC, AIC, ...)
+	\item \textit{tempChar\_unc}: cell array with temporal characteristics (duration, couplings, ...) for every subject's time courses
 \end{itemize}
 
 
