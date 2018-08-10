@@ -61,6 +61,10 @@ function ConsensusClustering(X,subject_labels,param)
             continue;
         end
         
+        if exist(fullfile(outDir_cons,['Consensus_' num2str(K_range(k)) '.mat']),'file')
+            load(fullfile(outDir_cons,['Consensus_' num2str(K_range(k)) '.mat']));
+        else
+        
         % Connectivity matrix that will contain 0s or 1s depending on whether
         % elements are clustered together or not
         M_sum=zeros(n_items,n_items);
@@ -169,18 +173,28 @@ function ConsensusClustering(X,subject_labels,param)
             Consensus(isnan(Consensus))=0;
         end
         
+        clear M_sum I_sum M I
+        
+        disp('Saving consensus results (not ordered) ...');
+        save(fullfile(outDir_cons,['Consensus_' num2str(K_range(k))]),'Consensus','-v7.3');
+        
+        end
+        
         disp('Ordering consensus matrix ...'); tic
         tree = linkage(1-Consensus,'average');
-
+        toc
         % Leaf ordering to create a nicely looking matrix
         leafOrder = optimalleaforder(tree,1-Consensus);
-        
+        toc
         % Ordered consensus matrix
         Consensus_ordered = Consensus(leafOrder,leafOrder);
+        toc
+        
+        clear Consensus leafOrder
         
         % computing CDF and AUC of consensus matrix
         [CDF(k,:),AUC(k,:)] = ComputeClusteringQuality(Consensus_ordered,K_range(k));
-        
+        toc
         disp('Saving consensus results ...');
         save(fullfile(outDir_cons,['Consensus_ordered_' num2str(K_range(k))]),'Consensus_ordered','-v7.3');
         
@@ -189,7 +203,7 @@ function ConsensusClustering(X,subject_labels,param)
         print(fullfile(outDir_cons,['Consensus_ordered_' num2str(K_range(k))]), '-dpng','-painters');
         close gcf
         
-        clearvars leafOrder M I M_sum I_sum Consensus Consensus_ordered
+        clearvars Consensus_ordered
     end
     save(fullfile(outDir_cons,'CDF'),'CDF');
     save(fullfile(outDir_cons,'AUC'),'AUC');
