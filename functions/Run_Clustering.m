@@ -218,10 +218,30 @@ function [] = Run_Clustering(param)
                 end
                 save4Dnii(param.outDir_iCAPs,'','iCAPs',iCAPs',fullfile(param.outDir_main,'final_mask.nii'),final_mask);
                 save4Dnii(param.outDir_iCAPs,'','iCAPs_z',iCAPs_z',fullfile(param.outDir_main,'final_mask.nii'),final_mask);
-
+                
             else
                  WriteInformation(fid,'Clustering already done, skipping...');
             end
+            
+            %% saving subjects maps
+            subjectsSaved=exist(fullfile(param.outDir_iCAPs,'subjectMaps',['iCAP_z_' num2str(param.K) '.nii']),'file');
+            if isfield(param,'saveSubjectMaps') && param.saveSubjectMaps && ...
+                    ~subjectsSaved
+                load(fullfile(param.outDir_iCAPs,'IDX'));
+                WriteInformation(fid,'Saving subject maps...');
+                saveSubjectMaps(param,subject_labels,IDX,I_sig,final_mask);
+            end
+            
+            %% saving tables with regions
+            regTableExist=exist(fullfile(param.outDir_iCAPs,'iCAPs_z_regions.txt'),'file');
+            if isfield(param,'saveRegionTables') && param.saveRegionTables && ...
+                    ~regTableExist
+                WriteInformation(fid,'Saving region tables...');
+                load(fullfile(param.outDir_iCAPs,'iCAPs_z'));
+                saveRegionTables(param,iCAPs_z,final_mask);
+            end
+            
+            
         end
     end
         

@@ -6,8 +6,8 @@
 param.doClustering=1;
 
 % if set to 1, Clustering will be forced to run, even if already has been done
-param.force_Aggregating=1;
-param.force_Clustering=1;
+param.force_Aggregating=0;
+param.force_Clustering=0;
 
 % file with external mask to use to define the input voxels,
 % if nothing is specified, the mask will be the intersection of the GM
@@ -41,6 +41,16 @@ param.saveClusterReplicateData=0;
 param.MaxIter=300;
 
 
+% save subject-specific iCAPs maps
+param.saveSubjectMaps=1;
+
+% save iCAPs regions tables
+param.saveRegionTables=1;
+param.regTab_thres=1.5; % z-score at which to threshold map for regions table
+param.regTab_codeBook='AALcodeBook.mat'; % file with atlas region names
+param.regTab_atlasFile='AAL90_correctLR.nii'; % file with atlas data in MNI (has to be in same space as iCAPs results)
+
+
 % Title used to create the folder where iCAPs data will be saved
 for nK=1:length(param.K)
     param.iCAPs_title{nK} = ['K_',num2str(param.K(nK)),'_Dist_',...
@@ -55,10 +65,10 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % select if consensus clustering should be run or not
-param.doConsensusClustering=1;
+param.doConsensusClustering=0;
 
 % if set to 1, Consensus Clustering will be forced to run, even if already has been done
-param.force_ConsensusClustering=1;
+param.force_ConsensusClustering=0;
 
 % Subsample Type:
 % 'subjects' to subsample all frames from a subject; 
