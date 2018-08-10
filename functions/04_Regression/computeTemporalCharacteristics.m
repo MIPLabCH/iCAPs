@@ -171,9 +171,9 @@ for iS = 1:nSub
         tempChar.duration_total_neg_counts(iC,iS)=nnz(TC_norm_thes{iS}(iC,:)<0);
         
         % compute duration in percentage of total scan time
-        tempChar.duration_total_perc(:,iS)=tempChar.duration_total_counts(:,iS)/tempChar.nTP_sub(iS)*100;
-        tempChar.duration_total_pos_perc(:,iS)=tempChar.duration_total_pos_counts(:,iS)/tempChar.nTP_sub(iS)*100;
-        tempChar.duration_total_neg_perc(:,iS)=tempChar.duration_total_neg_counts(:,iS)/tempChar.nTP_sub(iS)*100;
+        tempChar.duration_total_perc(iC,iS)=tempChar.duration_total_counts(iC,iS)/tempChar.nTP_sub(iS)*100;
+        tempChar.duration_total_pos_perc(iC,iS)=tempChar.duration_total_pos_counts(iC,iS)/tempChar.nTP_sub(iS)*100;
+        tempChar.duration_total_neg_perc(iC,iS)=tempChar.duration_total_neg_counts(iC,iS)/tempChar.nTP_sub(iS)*100;
 
         tempChar.duration_avg_counts(iC,iS)=tempChar.duration_total_counts(iC,iS)/activeComp.NumObjects;
         tempChar.duration_avg_pos_counts(iC,iS)=tempChar.duration_total_pos_counts(iC,iS)/tempChar.occurrences_pos(iC,iS);
@@ -219,9 +219,9 @@ for iS = 1:nSub
                 TC_norm_thes{iS}(iC2,:)<0;
             
             tempChar.coupling_sameSign_counts(iC,iC2,iS)=(nnz(tempChar.coupling_posPos_counts{iS}(iC,iC2,:))+...
-                nnz(tempChar.coupling_negNeg{iS}(iC,iC2,:)));
+                nnz(tempChar.coupling_negNeg_counts{iS}(iC,iC2,:)));
             tempChar.coupling_diffSign_counts(iC,iC2,iS)=(nnz(tempChar.coupling_posNeg_counts{iS}(iC,iC2,:))+...
-                nnz(tempChar.coupling_negPos{iS}(iC,iC2,:)));
+                nnz(tempChar.coupling_negPos_counts{iS}(iC,iC2,:)));
             
             % percentage of signed co-activation with iCAP iC2, with
             % respect to total positive or negative activation of both
