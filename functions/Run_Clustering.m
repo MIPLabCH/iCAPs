@@ -159,6 +159,39 @@ function [] = Run_Clustering(param)
     
     % main procedure for clustering:
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    
+    % consensus clustering
+    if isfield(param,'doConsensusClustering') && param.doConsensusClustering
+        % setting name of subfolder in which to save consensus results
+        if ~isfield(param,'cons_title') || isempty(param.cons_title)
+            param.cons_title=[num2str(param.K(1)) 'to' num2str(param.K(end)) ...
+                '_SubsampleType_' param.Subsample_type ...
+                '_Fraction_' strrep(num2str(param.Subsample_fraction),'.','DOT') ...
+                '_nFolds_' num2str(param.cons_n_folds) ...
+                '_Dist_' param.DistType];
+        end
+        
+        % defining consensus clustering output directory
+        param.outDir_cons=fullfile(param.PathData,'iCAPs_results',...
+            [param.data_title,'_',param.thresh_title],param.cons_title);
+        if ~exist(param.outDir_cons,'dir');mkdir(param.outDir_cons);end;
+        
+        
+        % check if consensus clustering has already been done
+        [~,~,ConsensusClustering_done,~] = Check_iCAPs_Files([],[],param.outDir_cons);
+        
+        if isfield(param,'force_ConsensusClustering') && param.force_ConsensusClustering
+            ConsensusClustering_done=0;
+        end
+        
+        if ~ConsensusClustering_done
+            ConsensusClustering(I_sig,subject_labels,param);
+            save(fullfile(param.outDir_cons,'param'),'param','-v7.3');
+        end
+        
+    end
+    
+    % clustering
     if ~isfield(param,'doClustering') || param.doClustering
         WriteInformation(fid,'Entering the clustering process...');
         % clustering for every K
@@ -240,39 +273,35 @@ function [] = Run_Clustering(param)
                 load(fullfile(param.outDir_iCAPs,'iCAPs_z'));
                 saveRegionTables(param,iCAPs_z,final_mask);
             end
-            
-            
         end
     end
-        
-        
-    if isfield(param,'doConsensusClustering') && param.doConsensusClustering
-        % setting name of subfolder in which to save consensus results
-        if ~isfield(param,'cons_title') || isempty(param.cons_title)
-            param.cons_title=[num2str(param.K(1)) 'to' num2str(param.K(end)) ...
-                '_SubsampleType_' param.Subsample_type ...
-                '_Fraction_' strrep(num2str(param.Subsample_fraction),'.','DOT') ...
-                '_nFolds_' num2str(param.cons_n_folds) ...
-                '_Dist_' param.DistType];
+    
+    % compute cluster stability based on consensus clustering (clustering
+    % and consensus clustering have to be done already)
+    if isfield(param,'computeClusterStability') && param.computeClusterStability
+        WriteInformation(fid,'Getting cluster consensus...');
+        % clustering for every K
+        for iK=1:length(param.iCAPs_title_cell)
+            param.iCAPs_title=param.iCAPs_title_cell{iK};
+            param.K=param.K_vect(iK);
+            WriteInformation(fid,['\nK=' num2str(param.K)]);
+            param.outDir_iCAPs=fullfile(param.outDir_main,param.iCAPs_title);
+            param.outDir_cons=fullfile(param.PathData,'iCAPs_results',...
+                [param.data_title,'_',param.thresh_title],param.cons_title);
+            % check files
+            [~,Clustering_done,ConsensusClustering_done] = Check_iCAPs_Files(param.outDir_main,param.outDir_iCAPs,param.outDir_cons);
+            if ~ConsensusClustering_done || ~Clustering_done
+                WriteInformation(fid,'Run consensus clustering and clustering first, stability not computed!');
+                continue
+            end
+            load(fullfile(param.outDir_iCAPs,'IDX'));
+            load(fullfile(param.outDir_cons,['Consensus_' num2str(param.K)]));
+            [iCAPs_consensus,iCAPs_nItems]=getClusterConsensus(IDX,Consensus);
+            for iC=1:param.K
+                WriteInformation(fid,['iCAP ' num2str(iC) ' (' num2str(iCAPs_nItems(iC)) ' frames) average consensus is ' num2str(iCAPs_consensus(iC))])
+            end
+            save(fullfile(param.outDir_iCAPs,'iCAPs_consensus'),'iCAPs_consensus');
+            save(fullfile(param.outDir_iCAPs,'iCAPs_nItems'),'iCAPs_nItems');
         end
-        
-        % defining consensus clustering output directory
-        param.outDir_cons=fullfile(param.PathData,'iCAPs_results',...
-            [param.data_title,'_',param.thresh_title],param.cons_title);
-        if ~exist(param.outDir_cons,'dir');mkdir(param.outDir_cons);end;
-        
-        
-        % check if consensus clustering has already been done
-        [~,~,ConsensusClustering_done,~] = Check_iCAPs_Files([],[],param.outDir_cons);
-        
-        if isfield(param,'force_ConsensusClustering') && param.force_ConsensusClustering
-            ConsensusClustering_done=0;
-        end
-        
-        if ~ConsensusClustering_done
-            ConsensusClustering(I_sig,subject_labels,param);
-            save(fullfile(param.outDir_cons,'param'),'param','-v7.3');
-        end
-        
     end
 end

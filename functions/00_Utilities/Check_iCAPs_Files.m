@@ -26,8 +26,8 @@ else
 end
 
 if nargin > 2 && ~isempty(cons_Path)
-    if exist(fullfile(cons_Path,'iCAPs.mat'),'file') && ...
-            exist(fullfile(cons_Path,'IDX.mat'),'file')
+    if exist(fullfile(cons_Path,'AUC.mat'),'file') && ...
+            exist(fullfile(cons_Path,'CDF.mat'),'file')
         ConsensusClustering_done = 1;
     else
         ConsensusClustering_done = 0;

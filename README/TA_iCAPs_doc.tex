@@ -113,6 +113,8 @@ For each step, there exists a script ``main\_[stepname]", which first calls a sc
 \section{Example data}
 The toolbox includes scripts and results for an example resting-state fMRI dataset. The example data was obtained from the OpenfMRI database (\href{https://openfmri.org/dataset/ds000030/)}{https://openfmri.org/dataset/ds000030/})) \cite{Poldrack2016} and preprocessed using Statistical Parametric Mapping (SPM12, Wellcome Trust Centre for Neuroimaging, London, UK: \href{http://www.fil.ion.ucl.ac.uk/spm/)}{http://www.fil.ion.ucl.ac.uk/spm/}). Initial preprocessing steps included realignment, spatial smoothing with an isotropic Gaussian kernel of \SI{6}{\milli\meter} full-width half-maximum, co-registration of structural scans to the functional mean and segmentation with the SPM12 \textit{Segmentation} algorithm \cite{Ashburner2005}. Further motion correction steps are included in the total activation pipeline.
 
+Look at the example main and input scripts to see how to run the complete pipeline on the example fMRI data of two subjects. Note that the results are not stable for this few data, the example only exists to demonstrate how input and output data is saved. Resulting iCAPs and time courses are very noisy and unstable because there is not enough input data for the clustering. For stable results, more subjects or longer runs would be necessary!
+
 
 \section{Total Activation}
 This sub-routine of the toolbox reads input fMRI data, conducts preprocessing steps for motion correction according to the options specified by the user and saves the results for every subject in a subdirectory ``TA\_results/$<$title of project$>$" in every subject's folder. After execution on the TA pipeline, this folder will contain the  following subfolders:
@@ -170,6 +172,8 @@ After aggregating data from all subjects, clustering will be applied to signific
 \subsection{Consensus Clustering}
 If requested according to the options, consensus clustering \cite{Monti2003} is applied to evaluate cluster stability and fid the best number of clusters to consider. After the routine, consensus matrices for each requested cluster number will be saved is a consensus clustering subfolder, as well as CDF and AUC of values in the consensus matrices. These files can then be used according to \cite{Monti2003} to decide on the best number of clusters.
 
+\subsection{Cluster Consensus}
+If clustering and consensus clustering has been done, the consensus of every cluster can be computed as the average consensus index between all pairs of frames belonging to the same cluster. Values range from 1 (all frames are always clustered together across resamples) to 0 (frames are never being clustered together). Higher values indicate higher stability of the cluster \cite{Monti2003}. 
 
 \subsection{Clustering-related Options}
 Have a look at the file \textit{Inputs\_Clustering\_Data.m} for the required inputs related to reading of TA and Thresholding results files. In \textit{Inputs\_Clustering.m} all options for clustering are provided and explained.

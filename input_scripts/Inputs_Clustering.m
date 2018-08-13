@@ -3,7 +3,7 @@
 
 % specify if clustering should be done (one may want to only run consensus 
 % clustering, then set this to 0), default = 1
-param.doClustering=1;
+param.doClustering=0;
 
 % if set to 1, Clustering will be forced to run, even if already has been done
 param.force_Aggregating=0;
@@ -65,7 +65,7 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % select if consensus clustering should be run or not
-param.doConsensusClustering=0;
+param.doConsensusClustering=1;
 
 % if set to 1, Consensus Clustering will be forced to run, even if already has been done
 param.force_ConsensusClustering=0;
@@ -83,4 +83,8 @@ param.cons_title=[num2str(param.K(1)) 'to' num2str(param.K(end)) ...
     '_nFolds_' num2str(param.cons_n_folds) ...
     '_Dist_' param.DistType];
 
+
+% flag to indicate that cluster consensus should be computed, clustering
+% and consensus clustering have to be done to compute this measure
+param.computeClusterStability=1;
 
