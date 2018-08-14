@@ -119,7 +119,8 @@ function [] = Run_Clustering(param)
         Aggregating_done=0;
     end
     
-    if ~Aggregating_done 
+    % only load aggregated data if clustering needs to be done (if only consensus is to be calculated, we don't need AI etc)
+    if ~Aggregating_done && ((isfield(param,'doConsensusClustering') && param.doConsensusClustering) || (~isfield(param,'doClustering') || param.doClustering)) 
         % aggregating frames
         WriteInformation(fid,'Aggregating Subject Frames...');
         
