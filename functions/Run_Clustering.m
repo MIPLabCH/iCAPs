@@ -266,7 +266,7 @@ function [] = Run_Clustering(param)
             end
             
             %% saving tables with regions
-            regTableExist=exist(fullfile(param.outDir_iCAPs,'iCAPs_z_regions.txt'),'file');
+            regTableExist=exist(fullfile(param.outDir_iCAPs,'iCAP_z_regions.txt'),'file');
             if isfield(param,'saveRegionTables') && param.saveRegionTables && ...
                     ~regTableExist
                 WriteInformation(fid,'Saving region tables...');
