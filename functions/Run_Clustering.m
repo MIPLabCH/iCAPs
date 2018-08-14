@@ -120,7 +120,8 @@ function [] = Run_Clustering(param)
     end
     
     % only load aggregated data if clustering needs to be done (if only consensus is to be calculated, we don't need AI etc)
-    if ~Aggregating_done && ((isfield(param,'doConsensusClustering') && param.doConsensusClustering) || (~isfield(param,'doClustering') || param.doClustering)) 
+    if (isfield(param,'doConsensusClustering') && param.doConsensusClustering) || (~isfield(param,'doClustering') || param.doClustering)
+    if ~Aggregating_done
         % aggregating frames
         WriteInformation(fid,'Aggregating Subject Frames...');
         
@@ -147,7 +148,7 @@ function [] = Run_Clustering(param)
         load(fullfile(param.outDir_main,'AI.mat'));
         load(fullfile(param.outDir_main,'AI_subject_labels.mat'));
     end
-    
+    end
     
     % adapting k and iCAPs title to make the code compatible with
     % multiple K
