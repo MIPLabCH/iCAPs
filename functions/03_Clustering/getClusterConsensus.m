@@ -14,9 +14,8 @@ for iC=1:nClus
     rowID=repmat(clusID,length(clusID),1);
     colID=repelem(clusID,length(clusID));
     
-    subMat=zeros(size(Consensus));
-    subMat(rowID,colID)=1;
+    matID=sub2ind(size(Consensus), rowID, colID);
     
-    iCAPs_consensus(iC,1)=mean(mean(Consensus(subMat>0)));
+    iCAPs_consensus(iC,1)=mean(mean(Consensus(matID)));
     iCAPs_nItems(iC,1)=length(clusID);
 end
