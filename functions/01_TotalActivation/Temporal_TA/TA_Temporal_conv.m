@@ -32,6 +32,7 @@ function [TC_OUT,param] = TA_Temporal(TCN,param)
     % moments are used. The corresponding high pass filter is given by:
 
     g=[0    -0.12941    -0.22414     0.83652    -0.48296];
+    g = g';
 
 
     % We iterate through all voxels to solve the problem
@@ -44,7 +45,7 @@ function [TC_OUT,param] = TA_Temporal(TCN,param)
         % of interest. 
 
         
-        coeff=cconv(TCN(:,i),g);
+        coef=cconv(TCN(:,i),g);
 
 
         % c. Median absolute deviation (sum of absolute valued
