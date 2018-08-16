@@ -70,7 +70,10 @@ function [TC_OUT,param] = RunTotalActivation(TCN,param)
         % Hence, at iteration k=1, we give our data (TCN) to My
         % Temporal. Then, we give (whole estimate - temporal estimate +
         % our data). See Karahanoglu et al. 2013 (NI), Algorithm 1
-        [temp,param] = TA_Temporal(TC_OUT-xT+TCN,param);
+        % Use the following line if the wavelet toolbox is available.
+        %[temp,param] = TA_Temporal(TC_OUT-xT+TCN,param);
+        % Otherwise,
+        [temp,param] = TA_Temporal_conv(TC_OUT-xT+TCN,param);
         xT = xT + stepsize*(temp - TC_OUT);
         disp('Finished temporal step...');
 
