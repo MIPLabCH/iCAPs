@@ -98,8 +98,8 @@ function [] = Run_Regression(param)
     
     % main procedure for regression:
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    if ~isfield(param,'doClustering') || param.doClustering
-        WriteInformation(fid,'Entering the clustering process...');
+    if ~isfield(param,'doRegression') || param.doRegression
+        WriteInformation(fid,'Entering the time course retrieval process...');
         % clustering for every K
         for iK=1:length(param.iCAPs_title_cell)
 
@@ -126,12 +126,12 @@ function [] = Run_Regression(param)
                 case 'unconstrained'
                     param.outDir_reg=fullfile(param.outDir_iCAPs,'TCs_unconstrained');
                     if ~exist(param.outDir_reg,'dir');mkdir(param.outDir_reg);end
-                    [~,~,~,Regression_done] = Check_iCAPs_Files([],[],[],param.outDir_reg);
+                    [~,~,~,~,Regression_unc_done] = Check_iCAPs_Files([],[],[],param.outDir_reg);
 
                     if isfield(param,'force_Regression') && param.force_Regression
-                        Regression_done=0;
+                        Regression_unc_done=0;
                     end
-                    if ~Regression_done
+                    if ~Regression_unc_done
                         WriteInformation(fid,'Loading aggregated data and iCAPs...');
                         load(fullfile(param.outDir_main,'AI.mat'));
                         load(fullfile(param.outDir_main,'AI_subject_labels.mat'));
@@ -163,12 +163,12 @@ function [] = Run_Regression(param)
                         num2str(mean(diff(param.softClusterThres))) '_' ...
                         num2str(param.softClusterThres(end))],'.','DOT'));
                     if ~exist(param.outDir_reg,'dir');mkdir(param.outDir_reg);end
-                    [~,~,~,Regression_done] = Check_iCAPs_Files([],[],[],param.outDir_reg);
+                    [~,~,~,Regression_ti_done,~] = Check_iCAPs_Files([],[],[],param.outDir_reg);
                     
                     if isfield(param,'force_Regression') && param.force_Regression
-                        Regression_done=0;
+                        Regression_ti_done=0;
                     end
-                    if ~Regression_done
+                    if ~Regression_ti_done
                         WriteInformation(fid,'Loading aggregated data and iCAPs...');
                         clusteringResults=Load_ClusteringResults(param);% the first input variable is not used anymore, since I compute the path from param
 

@@ -1,4 +1,4 @@
-function [Aggregating_done,Clustering_done,ConsensusClustering_done,Regression_done] = Check_iCAPs_Files(data_Path,iCAPs_Path,cons_Path,reg_Path)
+function [Aggregating_done,Clustering_done,ConsensusClustering_done,Regression_ti_done,Regression_unc_done] = Check_iCAPs_Files(data_Path,iCAPs_Path,cons_Path,reg_Path)
 
 if ~isempty(data_Path)
     if exist(fullfile(data_Path,'AI.mat'),'file') && ...
@@ -39,14 +39,19 @@ end
 
 if nargin > 3 && ~isempty(reg_Path)
     if (exist(fullfile(reg_Path,'TC.mat'),'file') && ...
-            exist(fullfile(cons_Path,'TC_stats.mat'),'file')) || ...
-            (exist(fullfile(reg_Path,'TC_unc_.mat'),'file') && ...
-            exist(fullfile(cons_Path,'TC_unc_stats.mat'),'file'))
-        Regression_done = 1;
+            exist(fullfile(reg_Path,'TC_stats.mat'),'file')) 
+        Regression_ti_done = 1;
     else
-        Regression_done = 0;
+        Regression_ti_done = 0;
+    end
+    if (exist(fullfile(reg_Path,'TC_unc_.mat'),'file') && ...
+            exist(fullfile(reg_Path,'TC_unc_stats.mat'),'file'))
+        Regression_unc_done = 1;
+    else
+        Regression_unc_done = 0;
     end
 else
-    Regression_done=nan;
+    Regression_ti_done=nan;
+    Regression_unc_done=nan;
 end
 
