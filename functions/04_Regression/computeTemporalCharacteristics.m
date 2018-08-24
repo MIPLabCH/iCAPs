@@ -101,7 +101,7 @@ end
 nTP_all=length(AI_subject_labels);
 
 if ~isfield(clusteringResults,'scrub_labels') || isempty(clusteringResults.scrub_labels) ...
-   || ~isfield(param,'excludeMotionFrames') || ~param.excludeMotionFrames
+   || ~isfield(param,'excludeMotionFromTC') || ~param.excludeMotionFromTC
     scrub_labels=ones(nTP_all,1);
 else
     scrub_labels=clusteringResults.scrub_labels;
