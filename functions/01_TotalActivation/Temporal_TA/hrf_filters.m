@@ -111,12 +111,12 @@ function [param] = hrf_filters(param)
     % 1024-element frequency response of the filter in d1, and
     % computation of the maximal eigenvalue
     d1 = freqz(hnum2,hden,1024);
-    param.maxeig = max(abs(d1).^2);
+    param.MaxEig = max(abs(d1).^2);
 
     % In the 'block' case, the analysis filter has one more zero
     % compared to the reconstruction filter
-    param.filter_analyze.num = hnum2;
-    param.filter_analyze.den = h_d;
+    param.f_Analyze.num = hnum2;
+    param.f_Analyze.den = h_d;
 end
 
 

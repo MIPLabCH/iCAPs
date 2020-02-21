@@ -11,7 +11,7 @@
 % Outputs:
 % - Data2 is a n_TP x n_ret_vox_2 matrix with the NaN traces removed
 % - mask2 is a new mask with the NaN time courses removed
-function [Innovation2,mask_out] = RemoveNan(Innovation,param,fid)
+function [Innovation2,mask_out,mask2] = RemoveNan(Innovation,param,fid)
     
     if size(Innovation,2)<size(Innovation,1)
         warning(['data probably inverted - number of voxels: ' num2str(size(Innovation,2)) ', number of frames ' num2str(size(Innovation,1)) ', transposing data ...'])

@@ -30,6 +30,7 @@
 %           morphological opterators
 %       .skipped_scans - number of fMRI scans to skip at the beginning
 %       .doDetrend - select if detrending should be done
+%       .doNormalize - select if normalizing without detrensing
 %       [.DCT_TS] - required if 'doDetrend' is set, cut-off period for the 
 %           DCT basis
 %       [.Covariates] - required if 'doDetrend' is set, covariates to add
@@ -176,9 +177,9 @@ function [] = Run_TA(param)
             
             % Detrending
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-            if param.doDetrend
+            if param.doDetrend || param.doNormalize
                 % Detrended time courses (n_vox x n_TP)
-                TC = DetrendTimeCourses(TC,param,fid);
+                [TC,STD_MAP] = DetrendTimeCourses(TC,param,fid);
             end
             
             % Update time-course length after interpolation
@@ -190,6 +191,7 @@ function [] = Run_TA(param)
             % saving preprocessed input data as 4D nifti file
             WriteInformation(fid,'Saving preprocessed fMRI 4D input (TC)...');
             save4Dnii(resultsPath,'inputData','TC',TC,param.fHeader.fname,param.mask,param.Dimension);
+            save4Dnii(resultsPath,'inputData','STD_MAP',STD_MAP,param.fHeader.fname,param.mask,param.Dimension);
             
             
             
@@ -207,6 +209,12 @@ function [] = Run_TA(param)
             % matlab variables contain the non-null values of the filter 
             % coefficients, from sample f[n] = f[0]
             param = hrf_filters(param);
+
+            % Make the graph from gray matter voxels for spatial regularization
+         
+            param = make_graph(param);
+            param.nu = 1;                      %gradient step for spatial reg
+
 
             % The param vector is updated within the total activation scheme; I
             % want to give exactly the same input for the surrogate and the real
@@ -240,7 +248,7 @@ function [] = Run_TA(param)
                 save(fullfile(resultsPath,'TotalActivation','param'),'param','-v7.3');
 
                 % clear memory
-                clear Activity_related Activity_inducing Innovation
+                clear Activity_related Activity_inducing Innovation STD_MAP
                     
             elseif TA_real_done==1
                 WriteInformation(fid,'Total activation on real data already computed, skipping...');

@@ -3,7 +3,7 @@
 
 % specify if clustering should be done (one may want to only run consensus 
 % clustering, then set this to 0), default = 1
-param.doClustering=0;
+param.doClustering=1;
 
 % if set to 1, Clustering will be forced to run, even if already has been done
 param.force_Aggregating=0;

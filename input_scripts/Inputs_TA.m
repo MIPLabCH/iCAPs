@@ -24,7 +24,7 @@ param.NitTemp = 500;
 param.NitSpat=400;
 
 % Tolerance threshold for convergence of the TA methods
-param.tol = 1e-6;
+param.tol = 1e-5;
 
 % Weighting parameters for the temporal and the spatial TA schemes: because
 % the temporal part is more elaborate and more extensively tested, Dr
@@ -35,13 +35,22 @@ param.weights = [0.75 0.25];
 % temporal regularization
 param.LambdaTempCoef = 1/0.8095;
 
+
+% The noise estimation procedure uses a single scale
+% wavelet decomposition. Here Daubechies wavelets with 4 vanishing 
+% moments are used. The corresponding high pass filter is given by:
+
+g=[0    -0.12941    -0.22414     0.83652    -0.48296];
+g = g';
+param.daub = g;
+
+
 % Weight of spatial regularization
 param.LambdaSpat=6;
 
-% Weight for the weight matrix generation from gray matter (GM) 
-% map: if the 'GM map difference in value' between two voxels is 
-% equal to 0.5, then the corresponding weight will be 
-% exp(-abs(0.5)/sigma) = exp(-1) = 0.3679. If the difference is 
-% 1.0 (maximum possible), the weight will be exp(-2) = 0.1353
-param.sigma=.5;
+
+
+
+param.COST_SAVE = 0; % save the costs..
+
 

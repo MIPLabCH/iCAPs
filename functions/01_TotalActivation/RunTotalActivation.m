@@ -16,6 +16,7 @@
 % Outputs:
 % - TC_OUT is a n_time_points x n_ret_voxels 2D matrix of data containing
 % the output time courses from the total activation process
+% Younes, Code optimization, Oct.2019
 function [TC_OUT,param] = RunTotalActivation(TCN,param)
 
     % Spatial regularization is called (note that temporal regularization is
@@ -41,10 +42,16 @@ function [TC_OUT,param] = RunTotalActivation(TCN,param)
     % tissue type as his neighbour
     
 
-    % param = get_weight_gradient(param); probability maps (optional),
-    % back to binary (Younes 30/01/2017)
 
-    param = get_decision_gradient(param);
+
+
+
+
+    
+    if ~isfield(param, 'maxit'), param.maxit = 200; end
+    if ~isfield(param, 'nu'), param.nu = 1; end
+    if ~isfield(param, 'tol'), param.tol = 10e-4; end
+
 	
 
     disp('Computed weights, entering loop...');
@@ -55,7 +62,7 @@ function [TC_OUT,param] = RunTotalActivation(TCN,param)
     % as the 'generalized forward-backward' splitting scheme
     while (k <= param.Nit)
 
-        disp(['Currently at iteration ',num2str(k),'...']);
+            fprintf('on iteration %d / %d\n', k, param.Nit);
         
         % Increases the number of iterations over which temporal
         % regularization is run at every call (for convergence)
@@ -73,9 +80,51 @@ function [TC_OUT,param] = RunTotalActivation(TCN,param)
         % Use the following line if the wavelet toolbox is available.
         %[temp,param] = TA_Temporal(TC_OUT-xT+TCN,param);
         % Otherwise,
-        [temp,param] = TA_Temporal_conv(TC_OUT-xT+TCN,param);
-        xT = xT + stepsize*(temp - TC_OUT);
-        disp('Finished temporal step...');
+        
+        if (length(param.Dimension) ~= 4)
+            error('SIZE should have 4 dimensions.')
+        end
+
+
+
+    
+        %EO: store last estimate of noise
+        noiseFin = zeros(param.NbrVoxels,1,'double');
+
+
+
+
+
+        TC_IN = TC_OUT-xT+TCN;
+
+            temp = zeros(size(TC_OUT),'double');
+            
+            tmt = 0;
+            
+            if (param.use_cuda==0)
+                fprintf('Launching MyTemporal\n');
+                tmt = toc;
+                [temp, param] = MyTemporal_conv(TC_IN, param);
+                fprintf('MyTemporal_conv completed in %.5f\n', toc-tmt);
+            else
+                fprintf('Launching MyTemporal_MEX\n');
+                tmt = toc;
+                f = parfeval(@MyTemporal_MEX, 2, TC_IN,     ...
+                             param.f_Analyze.num,           ...
+                             length(param.f_Analyze.den),   ...
+                             param.f_Analyze.den{1},        ...
+                             param.f_Analyze.den{2},        ...
+                             param.LambdaTempCoef,          ...
+                             param.MaxEig,                  ...
+                             param.COST_SAVE,               ...
+                             param.NitTemp,                 ...
+                             noiseFin);
+            end
+            
+            %fprintf('Temporal \n');
+            %xT = xT + (temp - TC_OUT); %update temporal, stepsize=1; xT = xT + stepsize*(temp - TC_OUT);
+            
+
 
         % 2. SPATIAL REGULARIZATION
 
@@ -83,14 +132,32 @@ function [TC_OUT,param] = RunTotalActivation(TCN,param)
         % regularization; the if condition forces the algorithm to stop
         % with a temporal regularization step (no spatial
         % regularization done at k=5)
-        if(k<param.Nit)
-            temp2 = TA_Spatial(TC_OUT-xS+TCN,param);
-            xS = xS+(temp2-TC_OUT);
-        end
-        disp('Finished spatial step...');
+
+
+
+
+       if(k<param.Nit)
+                fprintf('Launching Spatial regularization\n');
+                tms = toc;
+                % calculates for the whole volume
+                temp2 = TA_Spatial_Graph(TC_OUT-xS+TCN,param); % calculates for the whole volume
+                fprintf('TA_Spatial_Graph completed in %.5f sec\n', toc-tms);
+                xS = xS+(temp2-TC_OUT);
+            end
+
+            % EO: Wait for parallel execution of MyTemporal
+            %     /!\ Update noiseFin with noiseFinOut!
+            if (param.use_cuda==1)
+                [temp, noiseFin] = fetchOutputs(f);
+                fprintf('MyTemporal_MEX completed in %.5f\n', toc-tmt);
+                %noiseFin = noiseFinOut
+            end
+
 
         % 3. WEIGHTED AVERAGE OF THE SOLUTIONS
-        TC_OUT = xT*param.weights(1)+param.weights(2)*xS;
+        xT = xT + stepsize*(temp - TC_OUT); %update temporal, stepsize=1; xT = xT + stepsize*(temp - TC_OUT);
+            
+            TC_OUT = xT*param.weights(1)+param.weights(2)*xS;
         disp('Finished weighted averaging step...');
 
         k = k+1;

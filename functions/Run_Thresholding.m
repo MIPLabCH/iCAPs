@@ -112,16 +112,16 @@ function [] = Run_Thresholding(param)
             clear ptmp
 
             WriteInformation(fid,['Removing NaNs from innovations...']);
-            [Innovation_surrogate,param.mask_nonan] = RemoveNan(Innovation_surrogate,param,fid);
+            [Innovation_surrogate,param.mask_nonan,param.mask2_nonan] = RemoveNan(Innovation_surrogate,param,fid);
             
             WriteInformation(fid,['Computing percentiles...']);
             param.PC = ComputeSurrogatePercentiles(Innovation_surrogate,param,fid);
 
             WriteInformation(fid,['Selecting significant innovation frames...']);
-            [SignInnov,param] = SelectSignificantFrames(Innovation,param,fid);
+            [SignInnov,param] = SelectSignificantFrames(Innovation(:,param.mask2_nonan),param,fid);
 
             WriteInformation(fid,['Saving...']);
-            save4Dnii(fullfile(resultsPath,'Thresholding'),param.thresh_title,'SignInnov',SignInnov',param.fHeader.fname,param.mask,param.Dimension);
+            save4Dnii(fullfile(resultsPath,'Thresholding'),param.thresh_title,'SignInnov',SignInnov',param.fHeader.fname,param.mask_nonan,param.Dimension);
             save4Dnii(fullfile(resultsPath,'Thresholding'),param.thresh_title,'mask_nonan',param.mask_nonan,param.fHeader.fname,param.mask,param.Dimension);
             save(fullfile(resultsPath,'Thresholding',param.thresh_title,'SignInnov'),'SignInnov','-v7.3');
             save(fullfile(resultsPath,'Thresholding',param.thresh_title,'param'),'param','-v7.3');

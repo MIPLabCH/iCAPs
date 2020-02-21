@@ -25,10 +25,9 @@ wx_temp=1-abs(dx);
 wy_temp=1-abs(dy);
 wz_temp=1-abs(dz);
 
- % Repeats the 'gradient volume' t times, with t the number of time points
-    param.weight_x = repmat(wx_temp,[1 1 1 param.Dimension(4)]);
-    param.weight_y = repmat(wy_temp,[1 1 1 param.Dimension(4)]);
-    param.weight_z = repmat(wz_temp,[1 1 1 param.Dimension(4)]);
+    param.weight_x = wx_temp;
+    param.weight_y = wy_temp;
+    param.weight_z = wz_temp;
 
 
 end

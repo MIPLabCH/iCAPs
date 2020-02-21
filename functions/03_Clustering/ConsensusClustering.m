@@ -199,7 +199,7 @@ function ConsensusClustering(X,subject_labels,param)
         save(fullfile(outDir_cons,['Consensus_ordered_' num2str(K_range(k))]),'Consensus_ordered','-v7.3');
         
         figure;imagesc(Consensus_ordered,[0 1]);colorbar;title(['k= ' num2str(K_range(k))]);
-%         savefig(fullfile(outDir_cons,['Consensus_ordered_' num2str(K_range(k))]));
+        savefig(fullfile(outDir_cons,['Consensus_ordered_' num2str(K_range(k))]));
         print(fullfile(outDir_cons,['Consensus_ordered_' num2str(K_range(k))]), '-dpng','-painters');
         close gcf
         

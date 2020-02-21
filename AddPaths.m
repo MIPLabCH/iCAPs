@@ -26,5 +26,8 @@ function [] = AddPaths()
     
     % Path towards function to find knee points
     addpath(fullfile('packages','knee_pt'));
+
+     % Path towards function to findgsp toolbox
+    addpath(genpath(fullfile('packages','gspbox')));
     
 end

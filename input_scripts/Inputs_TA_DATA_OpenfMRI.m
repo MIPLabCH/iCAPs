@@ -17,7 +17,7 @@ param.TR = 2;
 % List of subjects on which to run total activation (must be a cell array
 % with all group/subject names). This is where the TA folder will be
 % created (or looked for) for each subject
-param.Subjects = {'sub-10171'};
+param.Subjects = {'sub-10159','sub-10171'};
 
 % Number of subjects considered
 param.n_subjects = length(param.Subjects);

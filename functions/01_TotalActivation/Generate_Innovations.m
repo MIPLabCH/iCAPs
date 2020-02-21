@@ -29,7 +29,7 @@ function [Innovation,Activity_inducing] = Generate_Innovations(TC_OUT,param)
  
         % Applies the analysis filter (also encompasses the differentiation
         % step)
-        Innovation(:,i) = filter_boundary(param.filter_analyze.num,param.filter_analyze.den,TC_OUT(:,i),'normal');
+        Innovation(:,i) = filter_boundary(param.f_Analyze.num ,param.f_Analyze.den,TC_OUT(:,i),'normal');
         
         % Those are the ways originally present in the code: I have no idea
         % why they were used instead of the above option...

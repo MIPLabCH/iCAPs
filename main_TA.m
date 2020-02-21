@@ -60,6 +60,13 @@ clc;clear all;close all;
 % Adds the paths required for total activation
 AddPaths();
 
+
+dwtmode('sym') % Default mode
+
+
+% EO: Set whether to use GPU implementation (= 1) or original Matlab.
+param.use_cuda = 0;
+
 % setting up all parameters to run TA
 Inputs_TA_DATA_OpenfMRI      % OpenfMRI test
 Inputs_TA
