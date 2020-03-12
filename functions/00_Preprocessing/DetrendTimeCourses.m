@@ -39,7 +39,7 @@ function [TCN,STD_MAP] = DetrendTimeCourses(TC,param,fid)
 
         for i=1:param.NbrVoxels;      
             % Only Normalization
-            stdval = std(TCN(i,:));
+            stdval = std(TC(i,:));
             STD_MAP(i) = stdval;
             TCN(i,:) = TCN(i,:)./stdval;
         end

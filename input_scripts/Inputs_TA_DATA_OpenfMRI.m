@@ -80,6 +80,7 @@ param.skipped_scans = 5;
 % select if detrending should be run on the data, if set to 0 the fields
 % 'DCT_TS' and 'Covariates' do not need to be set
 param.doDetrend=1;
+param.doNormalize =1;
 
 % Detrending information: cut-off period for the DCT basis (for example,
 % 128 means a cutoff of 1/128 = 0.0078 [Hz], and covariates to add (should
