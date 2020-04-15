@@ -41,7 +41,7 @@ function [TCN,STD_MAP] = DetrendTimeCourses(TC,param,fid)
             % Only Normalization
             stdval = std(TC(i,:));
             STD_MAP(i) = stdval;
-            TCN(i,:) = TCN(i,:)./stdval;
+            TCN(i,:) = TC(i,:)./stdval;
         end
 
         WriteInformation(fid,['Normalizing the data']);

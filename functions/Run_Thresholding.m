@@ -108,7 +108,9 @@ function [] = Run_Thresholding(param)
             param.fHeader=ptmp.param.fHeader;
             param.mask=ptmp.param.mask;
             param.Dimension=ptmp.param.Dimension;
-            param.TemporalMask=ptmp.param.TemporalMask;
+            if isfield(ptmp.param,'TemporalMask')
+                param.TemporalMask=ptmp.param.TemporalMask;
+            end
             clear ptmp
 
             WriteInformation(fid,['Removing NaNs from innovations...']);
