@@ -1,8 +1,11 @@
 **License**
 This toolbox is released under an [[ ssh://git@c4science.ch/source/iCAPs.git | Apache 2.0 license ]].
 
-**
-
+**Installation**
+The following toolboxes need to be installed and added to your path before using iCAPs:
+* [[ https://www.fil.ion.ucl.ac.uk/spm/software/spm12/ | SPM12 ]]
+* [[ https://www.nitrc.org/projects/cbinifti/ | cbiNifti ]]
+* [[ https://epfl-lts2.github.io/gspbox-html/ | GSPBox ]]
 
 **Link to zip**
 A nightly build (zip) can be downloaded at [[ https://miplab.epfl.ch/index.php/software/total-activation | https://miplab.epfl.ch/index.php/software/total-activation ]]
@@ -50,5 +53,5 @@ If you have any questions, error reports or if you simply want to chat about iCA
 **History**
 Initial algorithm & code development: Isik Karahanoglu
 Toolbox v1.0 implementation: Thomas Bolton
-Implementation of publicly available toolbox: Daniela Zöller
+Implementation of public toolbox: Daniela Zöller
 Current maintenance & contact: Younes Farouj
