@@ -1,5 +1,8 @@
 **License**
-This toolbox is being modified to be compliant with an [[ ssh://git@c4science.ch/source/iCAPs.git | Apache 2.0 license ]].
+This toolbox is released under an [[ ssh://git@c4science.ch/source/iCAPs.git | Apache 2.0 license ]].
+
+**
+
 
 **Link to zip**
 A nightly build (zip) can be downloaded at [[ https://miplab.epfl.ch/index.php/software/total-activation | https://miplab.epfl.ch/index.php/software/total-activation ]]
@@ -47,5 +50,5 @@ If you have any questions, error reports or if you simply want to chat about iCA
 **History**
 Initial algorithm & code development: Isik Karahanoglu
 Toolbox v1.0 implementation: Thomas Bolton
-Implementation of publicly available toolbox on c4science: Daniela Zöller
+Implementation of publicly available toolbox: Daniela Zöller
 Current maintenance & contact: Younes Farouj
