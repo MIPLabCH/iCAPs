@@ -17,7 +17,7 @@ Toolbox with functions and scripts to obtain innovation-driven coactivation patt
 * Clustering of innovation frames to extract spatial brain activity patterns
 * Spatio-temporal regression for time course recovery of networks
 
-The toolbox includes a README and example data and scripts for two subjects downloaded from the [[ https://openfmri.org/dataset/ds000030/ | OpenfMRI database ]]. Look at the example main and input scripts to see how to run the complete pipeline on the example fMRI data of two subjects. Note that the results are not stable for this few data, the example only exists to demonstrate how input and output data is saved.
+For a smooth start, we suggest to download example data for two subjects from [[ https://drive.google.com/drive/folders/17XhZ_9eJ9X65imFtaHg48WjAZRLHkRUJ?usp=sharing]]. Look at the example main and input scripts to see how to run the complete pipeline on the example fMRI data of two subjects. Note that the results are not stable for this few data, the example only exists to demonstrate how input and output data is saved.
 
 **Installation and updates**
 For installation, clone this repository using git:
@@ -48,10 +48,10 @@ For details about the algorithms please refer to:
  - Karahanoglu, F.I., Van De Ville, D. (2017). [[ https://www.sciencedirect.com/science/article/pii/S2468451117300417?via%3Dihub | Dynamics of Large-Scale fMRI Networks: Deconstruct Brain Activity to Build Better Models of Brain Function. ]] Current Opinion in Biomedical Engineering 3, pages 28-36.
 
 **Contact**
-If you have any questions, error reports or if you simply want to chat about iCAPs, feel free to contact: younes.farouj@epfl.ch
+If you have any questions, error reports or if you simply want to chat about iCAPs, feel free to contact: flavia.petruso@epfl.ch
 
 **History**
 Initial algorithm & code development: Isik Karahanoglu
 Toolbox v1.0 implementation: Thomas Bolton
 Implementation of public toolbox: Daniela Zöller
-Current maintenance & contact: Younes Farouj
+Current maintenance & contact: Petruso Flavia
